@@ -23,10 +23,26 @@ def move_dial(current, direction, amount):
         current = (current - amount) % 100
     elif direction == 'R':
         current = (current + amount) % 100
-    if current < 0:
-        current += 100
-    print(f"The dial is rotated {direction}{amount} to point at {current}")
+    # print(f"The dial is rotated {direction}{amount} to point at {current}")
     return current
+
+
+def move_dial2(current, direction, amount):
+    previous = current
+    crossovers = amount // 100
+    offset = amount % 100
+    if direction == "L":
+        offset = -offset
+    current = previous + offset
+    if previous != 0 and (current > 100 or current < 0):
+        crossovers += 1
+    current = current % 100
+    # message = f"The dial is rotated {direction}{amount} to point at {current}"
+    # print(f"--- {previous}\t+\t{direction}{amount}\t->\t{current}\t({cross})")
+    # if crossovers > 0:
+    #     message += f"; during this rotation, it points at 0 {crossovers}x."
+    # print(message)
+    return current, crossovers
 
 
 def part1(data):
@@ -49,14 +65,15 @@ def part2(data):
     dial_position = 50
     result = 0
     for direction, amount in instructions:
-        dial_position = move_dial(dial_position, direction, amount)
+        dial_position, cross = move_dial2(dial_position, direction, amount)
         if dial_position == 0:
             result += 1
-        crossovers = amount // 100
-        result += crossovers
+        result += cross
     return result
 
 
 if __name__ == "__main__":
+    # print(f"Part 1: {part1(get_data('example.txt'))}")
+    # print(f"Part 2: {part2(get_data('example.txt'))}")
     print(f"Part 1: {part1(get_data('input.txt'))}")
-    #print(f"Part 2: {part2(get_data('example.txt'))}")
+    print(f"Part 2: {part2(get_data('input.txt'))}")
